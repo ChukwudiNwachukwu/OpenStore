@@ -13,7 +13,10 @@ final class CatalogTests: XCTestCase {
     }
 
     func testWhitespaceAndMultipleWords() {
-        XCTAssertEqual(Catalog.search("  Open   Notebook  ").map(\.id), ["open-notebook"])
+        // Search includes descriptions: Joplin contains both "open-source" and "notebooks".
+        let expected: Set<String> = ["open-notebook", "joplin"]
+        XCTAssertEqual(Set(Catalog.search("  Open   Notebook  ").map(\.id)), expected)
+        XCTAssertEqual(Set(Catalog.search("Notebook Open").map(\.id)), expected)
         XCTAssertEqual(Catalog.search(" \n ").count, Catalog.projects.count)
         XCTAssertTrue(Catalog.search("no-such-project-123").isEmpty)
     }
